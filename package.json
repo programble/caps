@@ -1,0 +1,19 @@
+{
+  "name": "caps",
+  "version": "0.0.0",
+  "description": "Description.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/programble/caps"
+  },
+  "author": "Curtis McEnroe <programble@gmail.com> (http://cmcenroe.me)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/programble/caps/issues"
+  },
+  "homepage": "https://github.com/programble/caps"
+}
