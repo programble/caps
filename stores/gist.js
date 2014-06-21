@@ -12,9 +12,10 @@ module.exports = {
           }
         }
       })
-      .on('error', done)
-      .end(function(res) {
-        if (res.body.id)
+      .end(function(err, res) {
+        if (err || res.error)
+          done(err || res.error);
+        else if (res.body.id)
           done(null, res.body.id);
         else
           done(new Error('no id'));
@@ -23,8 +24,9 @@ module.exports = {
 
   get: function(id, done) {
     request.get(this.URL + '/gists/' + id)
-      .on('error', done)
-      .end(function(res) {
+      .end(function(err, res) {
+        if (err || res.error)
+          done(err || res.error);
         if (res.body.files && res.body.files.base64 && res.body.files.base64.content)
           done(null, new Buffer(res.body.files.base64.content, 'base64'));
         else

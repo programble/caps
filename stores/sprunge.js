@@ -9,9 +9,10 @@ module.exports = {
     request.post(this.URL)
       .type('form')
       .send({ sprunge: this.PREFIX + buf.toString('base64') })
-      .on('error', done)
-      .end(function(res) {
-        if (res.text)
+      .end(function(err, res) {
+        if (err || res.error)
+          done(err || res.error);
+        else if (res.text)
           done(null, res.text.split('/').reverse()[0]);
         else
           done(new Error('no url'));
@@ -20,13 +21,13 @@ module.exports = {
 
   get: function(id, done) {
     var self = this;
-    request.get(self.URL + '/' + id)
-      .on('error', done)
-      .end(function(res) {
-        if (res.text)
-          done(null, new Buffer(res.text.slice(self.PREFIX.length), 'base64'));
-        else
-          done(new Error('no url'));
-      });
+    request.get(self.URL + '/' + id).end(function(err, res) {
+      if (err || res.error)
+        done(err, res.error);
+      else if (res.text)
+        done(null, new Buffer(res.text.slice(self.PREFIX.length), 'base64'));
+      else
+        done(new Error('no url'));
+    });
   }
 };

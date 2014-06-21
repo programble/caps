@@ -10,9 +10,10 @@ module.exports = {
       .type('form')
       .send({ private: true })
       .send({ contents: buf.toString('base64') })
-      .on('error', done)
-      .end(function(res) {
-        if (res.body['paste-id'])
+      .end(function(err, res) {
+        if (err || res.error)
+          done(err || res.error);
+        else if (res.body['paste-id'])
           done(null, res.body['paste-id']);
         else
           done(new Error('no paste id'));
@@ -20,13 +21,13 @@ module.exports = {
   },
 
   get: function(id, done) {
-    request.get(this.URL + '/paste/' + id)
-      .on('error', done)
-      .end(function(res) {
-        if (res.body.contents)
-          done(null, new Buffer(res.body.contents, 'base64'));
-        else
-          done(new Error('no paste contents'));
-      });
+    request.get(this.URL + '/paste/' + id).end(function(err, res) {
+      if (err || res.error)
+        done(err || res.error);
+      else if (res.body.contents)
+        done(null, new Buffer(res.body.contents, 'base64'));
+      else
+        done(new Error('no paste contents'));
+    });
   }
 };
