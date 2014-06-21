@@ -15,6 +15,8 @@ var CHUNK_SIZE = 8192; // 8 KiB
 describe('Store', function() {
   _.forOwn(Stores, function(store, name) {
     describe(name, function() {
+      this.timeout(5000);
+
       before(function() {
         if (store.maxChunkSize && store.maxChunkSize < CHUNK_SIZE)
           this.chunk = randomBuffer(store.maxChunkSize);
