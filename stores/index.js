@@ -10,3 +10,4 @@ stores.push(Stores.gist    = require('./gist'));
 stores.push(Stores.refheap = require('./refheap'));
 stores.push(Stores.sprunge = require('./sprunge'));
 stores.push(Stores.isgd    = require('./isgd'));
+stores.push(Stores.vgd     = require('./vgd'));
