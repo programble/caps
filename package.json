@@ -18,6 +18,7 @@
   "homepage": "https://github.com/programble/caps",
   "dependencies": {
     "lodash": "^2.4.1",
+    "node-png": "^0.4.3",
     "superagent": "^0.18.0"
   },
   "devDependencies": {
