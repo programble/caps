@@ -10,3 +10,6 @@ module.exports = [
   require('./vgd'),
   require('./pastebin')
 ];
+
+for (var i = 0; i < module.exports.length; i++)
+  module.exports[i].id = i;
