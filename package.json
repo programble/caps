@@ -1,8 +1,10 @@
 {
   "name": "caps",
-  "version": "0.0.0",
-  "description": "Description.",
-  "main": "index.js",
+  "version": "0.1.0",
+  "description": "Store any file on anonymous public services",
+  "bin": {
+    "caps": "./bin/caps.js"
+  },
   "scripts": {
     "test": "./node_modules/.bin/mocha"
   },
