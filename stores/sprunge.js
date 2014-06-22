@@ -13,7 +13,7 @@ module.exports = {
         if (err || res.error)
           done(err || res.error);
         else if (res.text)
-          done(null, res.text.split('/').reverse()[0]);
+          done(null, res.text.trim().split('/').reverse()[0]);
         else
           done(new Error('no url'));
       });
