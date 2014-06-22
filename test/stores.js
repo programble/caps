@@ -1,14 +1,8 @@
 var _ = require('lodash');
 var assert = require('assert');
+var crypto = require('crypto');
 
 var Stores = require('../stores');
-
-function randomBuffer(size) {
-  var buf = new Buffer(size);
-  for (var i = 0; i < size; i++)
-    buf[i] = _.random(0, 255);
-  return buf;
-}
 
 var CHUNK_SIZE = 8192; // 8 KiB
 
@@ -19,9 +13,9 @@ describe('Store', function() {
 
       before(function() {
         if (store.maxChunkSize && store.maxChunkSize < CHUNK_SIZE)
-          this.chunk = randomBuffer(store.maxChunkSize);
+          this.chunk = crypto.randomBytes(store.maxChunkSize);
         else
-          this.chunk = randomBuffer(CHUNK_SIZE);
+          this.chunk = crypto.randomBytes(CHUNK_SIZE);
       });
 
       it('puts', function(done) {
