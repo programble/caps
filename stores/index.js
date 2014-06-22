@@ -12,3 +12,4 @@ stores[2] = Stores.refheap  = require('./refheap');
 stores[3] = Stores.isgd     = require('./isgd');
 stores[4] = Stores.vgd      = require('./vgd');
 stores[5] = Stores.pastebin = require('./pastebin');
+stores[6] = Stores.imgur    = require('./imgur');
