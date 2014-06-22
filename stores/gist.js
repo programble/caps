@@ -24,7 +24,7 @@ module.exports = {
       });
   },
 
-  get: function(id, done) {
+  get: function(id, len, done) {
     request.get(this.URL + '/gists/' + id)
       .end(function(err, res) {
         if (err || res.error)

@@ -28,7 +28,7 @@ describe('Store', function() {
 
       it('gets', function(done) {
         var self = this;
-        store.get(self.ret, function(err, chunk) {
+        store.get(self.ret, self.chunk.length, function(err, chunk) {
           if (chunk)
             assert.deepEqual(chunk, self.chunk);
           done(err);

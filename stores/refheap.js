@@ -22,7 +22,7 @@ module.exports = {
       });
   },
 
-  get: function(id, done) {
+  get: function(id, len, done) {
     request.get(this.URL + '/paste/' + id).end(function(err, res) {
       if (err || res.error)
         done(err || res.error);

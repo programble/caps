@@ -1,3 +1,4 @@
+var _ = require('lodash');
 var request = require('superagent');
 
 var PNG = require('../lib/png');
@@ -26,16 +27,16 @@ module.exports = {
           if (err || res.error)
             done(err || res.error);
           else if (res.body.data && res.body.data.id)
-            done(null, [ res.body.data.id, buf.length ]);
+            done(null, res.body.data.id);
           else
             done(new Error('no id'));
         });
     });
   },
 
-  get: function(info, done) {
-    var id = info[0];
-    var len = info[1];
+  get: function(id, len, done) {
+    // Backwards compatibility for when len was saved with id
+    if (_.isArray(id)) id = id[0];
     request.get(this.IMAGE_URL + '/' + id + '.png').end(function(err, res) {
       if (err || res.error)
         return done(err || res.error);
