@@ -40,7 +40,28 @@ if (action != 'u' && action != 'd' && action != 'c') showHelp();
 
 var file = argv._.shift() || '-';
 
+function readInput(done) {
+  if (file == '-') {
+    var chunks = [];
+    process.stdin.on('data', function(chunk) {
+      chunks.push(chunk);
+    });
+    process.stdin.on('end', function() {
+      done(null, Buffer.concat(chunks));
+    });
+  } else {
+    fs.readFile(file, done);
+  }
+}
+
 var output = argv.o || argv.output || '-';
+
+function writeOutput(buf) {
+  if (output == '-')
+    process.stdout.write(buf);
+  else
+    fs.writeFileSync(output, buf);
+}
 
 var format = argv.f || argv.format || 'base64';
 if (!_.contains(Convert.FORMATS, format)) {
@@ -74,57 +95,27 @@ if (action == 'u') {
     console.error('error: no available stores');
   }
 
-  if (file == '-') {
-    var chunks = [];
-    process.stdin.on('data', function(chunk) {
-      chunks.push(chunk);
-    });
-    process.stdin.on('end', function() {
-      upload(null, Buffer.concat(chunks));
-    });
-  } else {
-    fs.readFile(file, upload);
-  }
-
-  function upload(err, buf) {
+  readInput(function(err, buf) {
     if (err) throw err;
     Caps.upload(buf, chunkSize, redundancy, stores, log, function(err, data) {
       if (err) throw err;
       Convert.to(format, data, function(err, dataBuf) {
         if (err) throw err;
-        if (output == '-')
-          process.stdout.write(dataBuf);
-        else
-          fs.writeFileSync(output, dataBuf);
+        writeOutput(buf);
       });
     });
-  }
+  });
 } else if (action == 'd') {
-  if (file == '-') {
-    var chunks = [];
-    process.stdin.on('data', function(chunk) {
-      chunks.push(chunk);
-    });
-    process.stdin.on('end', function() {
-      parseData(null, Buffer.concat(chunks));
-    });
-  } else {
-    fs.readFile(file, parseData);
-  }
-
-  function parseData(err, data) {
+  readInput(function(err, data) {
     if (err) throw err;
     Convert.from(format, data, function(err, data) {
       if (err) throw err;
       Caps.download(data, Stores, log, function(err, buf) {
         if (err) throw err;
-        if (output == '-')
-          process.stdout.write(buf);
-        else
-          fs.writeFileSync(output, buf);
+        writeOutput(buf);
       });
     })
-  }
+  });
 } else if (action == 'c') {
   var inputFormat = argv.i || argv.input || 'base64';
   if (!_.contains(Convert.FORMATS, inputFormat)) {
@@ -132,31 +123,14 @@ if (action == 'u') {
     process.exit(1);
   }
 
-  // TODO: Factor out
-  if (file == '-') {
-    var chunks = [];
-    process.stdin.on('data', function(chunk) {
-      chunks.push(chunk);
-    });
-    process.stdin.on('end', function() {
-      convertInput(null, Buffer.concat(chunks));
-    });
-  } else {
-    fs.readFile(file, convertInput);
-  }
-
-  function convertInput(err, inputData) {
+  readInput(function(err, inputData) {
     if (err) throw err;
     Convert.from(inputFormat, inputData, function(err, interData) {
       if (err) throw err;
       Convert.to(format, interData, function(err, outputData) {
         if (err) throw err;
-        // TODO: Factor out
-        if (output == '-')
-          process.stdout.write(outputData);
-        else
-          fs.writeFileSync(output, outputData);
+        writeOutput(outputData);
       });
     });
-  }
+  });
 }
