@@ -3,6 +3,8 @@ var request = require('superagent');
 var PNG = require('../lib/png');
 
 module.exports = {
+  maxChunkSize: 999602, // 1 MB PNG
+
   URL: 'https://api.imgur.com/3',
   CLIENT_ID: '53ce0ac961e2fb8',
   IMAGE_URL: 'http://i.imgur.com',
