@@ -10,11 +10,14 @@ var Convert = require('../lib/convert');
 
 function showHelp() {
   [
-    'usage: caps upload|download [options...] [file]',
+    'usage: caps upload|download|convert [options...] [file]',
     '',
     'upload options:',
     '  -b, --chunk-size=131072  maximum chunk size in bytes',
     '  -r, --redundancy=1       chunk upload redundancy',
+    '',
+    'convert options:',
+    '  -i, --input=base64       format of input (see -f)',
     '',
     'common options:',
     '  -o, --output=-           output to file',
@@ -33,15 +36,14 @@ if (argv.h || argv.help) showHelp();
 var action = argv._.shift();
 if (!action) showHelp();
 action = action[0];
-if (action != 'u' && action != 'd') showHelp();
+if (action != 'u' && action != 'd' && action != 'c') showHelp();
+
+var file = argv._.shift() || '-';
 
 var output = argv.o || argv.output || '-';
 
 var format = argv.f || argv.format || 'base64';
-if (format != 'json' &&
-    format != 'msgpack' &&
-    format != 'base64' &&
-    format != 'png') {
+if (!_.contains(Convert.FORMATS, format)) {
   console.error('error: invalid format');
   process.exit(1);
 }
@@ -52,8 +54,6 @@ function log() {
 }
 
 if (action == 'u') {
-  var file = argv._.shift() || '-';
-
   var chunkSize = argv.b || argv['chunk-size'] || 131072;
   if (!_.isNumber(chunkSize)) {
     console.error('error: chunk size must be an integer');
@@ -99,9 +99,7 @@ if (action == 'u') {
       });
     });
   }
-} else {
-  var file = argv._.shift() || '-';
-
+} else if (action == 'd') {
   if (file == '-') {
     var chunks = [];
     process.stdin.on('data', function(chunk) {
@@ -126,5 +124,39 @@ if (action == 'u') {
           fs.writeFileSync(output, buf);
       });
     })
+  }
+} else if (action == 'c') {
+  var inputFormat = argv.i || argv.input || 'base64';
+  if (!_.contains(Convert.FORMATS, inputFormat)) {
+    console.error('error: invalid input format');
+    process.exit(1);
+  }
+
+  // TODO: Factor out
+  if (file == '-') {
+    var chunks = [];
+    process.stdin.on('data', function(chunk) {
+      chunks.push(chunk);
+    });
+    process.stdin.on('end', function() {
+      convertInput(null, Buffer.concat(chunks));
+    });
+  } else {
+    fs.readFile(file, convertInput);
+  }
+
+  function convertInput(err, inputData) {
+    if (err) throw err;
+    Convert.from(inputFormat, inputData, function(err, interData) {
+      if (err) throw err;
+      Convert.to(format, interData, function(err, outputData) {
+        if (err) throw err;
+        // TODO: Factor out
+        if (output == '-')
+          process.stdout.write(outputData);
+        else
+          fs.writeFileSync(output, outputData);
+      });
+    });
   }
 }
