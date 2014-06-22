@@ -6,14 +6,14 @@ var msgpack = require('msgpack');
 
 var Caps = require('../lib/caps');
 var Stores = require('../stores');
-var PNG = require('../lib/png');
+var Convert = require('../lib/convert');
 
 function showHelp() {
   [
     'usage: caps upload|download [options...] [file]',
     '',
     'upload options:',
-    '  -b, --chunk-size=8192    maximum chunk size in bytes',
+    '  -b, --chunk-size=131072  maximum chunk size in bytes',
     '  -r, --redundancy=1       chunk upload redundancy',
     '',
     'common options:',
@@ -54,7 +54,7 @@ function log() {
 if (action == 'u') {
   var file = argv._.shift() || '-';
 
-  var chunkSize = argv.b || argv['chunk-size'] || 8192;
+  var chunkSize = argv.b || argv['chunk-size'] || 131072;
   if (!_.isNumber(chunkSize)) {
     console.error('error: chunk size must be an integer');
     process.exit(1);
@@ -90,23 +90,13 @@ if (action == 'u') {
     if (err) throw err;
     Caps.upload(buf, chunkSize, redundancy, stores, log, function(err, data) {
       if (err) throw err;
-
-      if (format == 'json')
-        write(null, new Buffer(JSON.stringify(data)));
-      else if (format == 'msgpack')
-        write(null, msgpack.pack(data));
-      else if (format == 'base64')
-        write(null, msgpack.pack(data).toString('base64'));
-      else if (format == 'png')
-        PNG.encode(msgpack.pack(data), write);
-
-      function write(err, dataBuf) {
+      Convert.to(format, data, function(err, dataBuf) {
         if (err) throw err;
         if (output == '-')
           process.stdout.write(dataBuf);
         else
           fs.writeFileSync(output, dataBuf);
-      }
+      });
     });
   }
 } else {
@@ -126,27 +116,15 @@ if (action == 'u') {
 
   function parseData(err, data) {
     if (err) throw err;
-
-    if (format == 'json')
-      download(null, JSON.parse(data.toString()));
-    else if (format == 'msgpack')
-      download(null, msgpack.unpack(data));
-    else if (format == 'base64')
-      download(null, msgpack.unpack(new Buffer(data.toString(), 'base64')));
-    else if (format == 'png')
-      PNG.decode(data, data.length, function(err, decoded) {
-        download(err, err || msgpack.unpack(decoded));
-      });
-  }
-
-  function download(err, data) {
-    if (err) throw err;
-    Caps.download(data, Stores, log, function(err, buf) {
+    Convert.from(format, data, function(err, data) {
       if (err) throw err;
-      if (output == '-')
-        process.stdout.write(buf);
-      else
-        fs.writeFileSync(output, buf);
-    });
+      Caps.download(data, Stores, log, function(err, buf) {
+        if (err) throw err;
+        if (output == '-')
+          process.stdout.write(buf);
+        else
+          fs.writeFileSync(output, buf);
+      });
+    })
   }
 }
