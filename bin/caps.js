@@ -13,7 +13,7 @@ function showHelp() {
     'usage: caps upload|download|convert [options...] [file]',
     '',
     'upload options:',
-    '  -b, --chunk-size=131072  maximum chunk size in bytes',
+    '  -b, --chunk-size=262144  maximum chunk size in bytes',
     '  -r, --redundancy=1       chunk upload redundancy',
     '',
     'convert options:',
@@ -54,7 +54,7 @@ function log() {
 }
 
 if (action == 'u') {
-  var chunkSize = argv.b || argv['chunk-size'] || 131072;
+  var chunkSize = argv.b || argv['chunk-size'] || 262144;
   if (!_.isNumber(chunkSize)) {
     console.error('error: chunk size must be an integer');
     process.exit(1);
