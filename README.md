@@ -92,15 +92,15 @@ shorteners) or as PNG pixel data (to image sharing services). Most
 services enforce a hard limit on the size of data that can be uploaded,
 which must be considered when choosing chunk sizes.
 
-| ID | Name          | Encoding | Max Chunk Size (bytes) | Notes
-| -- | ------------- | -------- | ---------------------- | -----
-| 0  | [gist][0]     | base64   | unknown                |
-| 1  | [imgur][1]    | PNG      | 999602                 | Lossless PNGs up to 1 MB
-| 2  | [refheap][2]  | base64   | 460797                 |
-| 3  | [sprunge][3]  | base64   | none                   |
-| 4  | [is.gd][4]    | URL      | 3735                   |
-| 5  | [v.gd][5]     | URL      | 3735                   | is.gd on a different domain
-| 6  | [pastebin][6] | base64   | 384000                 | Nasty rate limits :disappointed:
+| ID | Name          | Encoding | Max Chunk Size (bytes) | Notes |
+| -- | ------------- | -------- | ---------------------- | ----- |
+| 0  | [gist][0]     | base64   | unknown                |       |
+| 1  | [imgur][1]    | PNG      | 999602                 | Lossless PNGs up to 1 MB |
+| 2  | [refheap][2]  | base64   | 460797                 |       |
+| 3  | [sprunge][3]  | base64   | none                   |       |
+| 4  | [is.gd][4]    | URL      | 3735                   |       |
+| 5  | [v.gd][5]     | URL      | 3735                   | is.gd on a different domain |
+| 6  | [pastebin][6] | base64   | 384000                 | Nasty rate limits :disappointed: |
 
  [0]: https://gist.github.com
  [1]: http://imgur.com
@@ -120,8 +120,8 @@ File chunks uploaded by Caps are publicly accessible and unencrypted. If
 you are concerned about privacy, encrypt your files before using Caps.
 
 Storage services may not retain data indefinitely. Do not expect Caps
-data to work forever. For increased chances of successful downloads, use
-redundancy.
+downloads to work forever. For increased chances of successful
+downloads, use redundancy.
 
 ## License
 
