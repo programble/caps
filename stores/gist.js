@@ -1,7 +1,7 @@
 var request = require('superagent');
 
 module.exports = {
-  name: 'GitHub Gist',
+  name: 'gist',
 
   URL: 'https://api.github.com',
 

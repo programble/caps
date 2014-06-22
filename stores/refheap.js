@@ -1,7 +1,7 @@
 var request = require('superagent');
 
 module.exports = {
-  name: 'Refheap',
+  name: 'refheap',
 
   maxChunkSize: 460797, // 614396 bytes of base64-encoded data
 
