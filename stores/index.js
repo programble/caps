@@ -1,15 +1,25 @@
-var stores = [];
-module.exports = Stores = function(i) {
-  return stores[i];
-};
+var _ = require('lodash');
 
-// Indices must remain stable. New stores should be added to the end. An empty
-// item should be left in place of a removed store.
+function Stores() {
+  return _(Stores).values().sortBy('id').value();
+}
 
-stores[0] = Stores.gist     = require('./gist');
-stores[1] = Stores.sprunge  = require('./sprunge');
-stores[2] = Stores.refheap  = require('./refheap');
-stores[3] = Stores.isgd     = require('./isgd');
-stores[4] = Stores.vgd      = require('./vgd');
-stores[5] = Stores.pastebin = require('./pastebin');
-stores[6] = Stores.imgur    = require('./imgur');
+_.assign(Stores, {
+  gist:     require('./gist'),
+  imgur:    require('./imgur'),
+  refheap:  require('./refheap'),
+  sprunge:  require('./sprunge'),
+  isgd:     require('./isgd'),
+  vgd:      require('./vgd'),
+  pastebin: require('./pastebin')
+});
+
+Stores.gist.id     = 0;
+Stores.imgur.id    = 5;
+Stores.refheap.id  = 10;
+Stores.sprunge.id  = 15;
+Stores.isgd.id     = 20;
+Stores.vgd.id      = 21;
+Stores.pastebin.id = 25;
+
+module.exports = Stores;
