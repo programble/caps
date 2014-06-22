@@ -101,7 +101,7 @@ if (action == 'u') {
       if (err) throw err;
       Convert.to(format, data, function(err, dataBuf) {
         if (err) throw err;
-        writeOutput(buf);
+        writeOutput(dataBuf);
       });
     });
   });
