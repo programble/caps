@@ -12,4 +12,5 @@ module.exports = [
 ];
 
 for (var i = 0; i < module.exports.length; i++)
-  module.exports[i].id = i;
+  if (module.exports[i])
+    module.exports[i].id = i;
