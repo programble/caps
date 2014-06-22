@@ -6,17 +6,19 @@ var msgpack = require('msgpack');
 
 var Caps = require('../lib/caps');
 var Stores = require('../stores');
+var PNG = require('../lib/png');
 
 function showHelp() {
   [
-    'usage: caps upload|download [options...] <file|data>',
+    'usage: caps upload|download [options...] [file]',
     '',
     'upload options:',
-    '  -b, --chunk-size=bytes   maximum chunk size in bytes (default: 8192)',
-    '  -r, --redundancy=n       chunk upload redundancy (default: 1)',
+    '  -b, --chunk-size=8192    maximum chunk size in bytes',
+    '  -r, --redundancy=1       chunk upload redundancy',
     '',
-    'download options:',
-    '  -o, --output=file        output to file (default: stdout)',
+    'common options:',
+    '  -o, --output=-           output to file',
+    '  -f, --format=base64      format of data: json, msgpack, base64, png',
     '',
     'general options:',
     '  -q, --quiet              suppress logging',
@@ -33,7 +35,16 @@ if (!action) showHelp();
 action = action[0];
 if (action != 'u' && action != 'd') showHelp();
 
-if (!argv._[0]) showHelp();
+var output = argv.o || argv.output || '-';
+
+var format = argv.f || argv.format || 'base64';
+if (format != 'json' &&
+    format != 'msgpack' &&
+    format != 'base64' &&
+    format != 'png') {
+  console.error('error: invalid format');
+  process.exit(1);
+}
 
 function log() {
   if (!argv.q && !argv.quiet)
@@ -41,7 +52,7 @@ function log() {
 }
 
 if (action == 'u') {
-  var file = argv._.shift();
+  var file = argv._.shift() || '-';
 
   var chunkSize = argv.b || argv['chunk-size'] || 8192;
   if (!_.isNumber(chunkSize)) {
@@ -63,22 +74,79 @@ if (action == 'u') {
     console.error('error: no available stores');
   }
 
-  var buf = fs.readFileSync(file);
+  if (file == '-') {
+    var chunks = [];
+    process.stdin.on('data', function(chunk) {
+      chunks.push(chunk);
+    });
+    process.stdin.on('end', function() {
+      upload(null, Buffer.concat(chunks));
+    });
+  } else {
+    fs.readFile(file, upload);
+  }
 
-  Caps.upload(buf, chunkSize, redundancy, stores, log, function(err, data) {
+  function upload(err, buf) {
     if (err) throw err;
-    console.log(msgpack.pack(data).toString('base64'));
-  });
+    Caps.upload(buf, chunkSize, redundancy, stores, log, function(err, data) {
+      if (err) throw err;
+
+      if (format == 'json')
+        write(null, new Buffer(JSON.stringify(data)));
+      else if (format == 'msgpack')
+        write(null, msgpack.pack(data));
+      else if (format == 'base64')
+        write(null, msgpack.pack(data).toString('base64'));
+      else if (format == 'png')
+        PNG.encode(msgpack.pack(data), write);
+
+      function write(err, dataBuf) {
+        if (err) throw err;
+        if (output == '-')
+          process.stdout.write(dataBuf);
+        else
+          fs.writeFileSync(output, dataBuf);
+      }
+    });
+  }
 } else {
-  var data = msgpack.unpack(new Buffer(argv._.shift(), 'base64'));
+  var file = argv._.shift() || '-';
 
-  var outputFile = argv.o || argv.output;
+  if (file == '-') {
+    var chunks = [];
+    process.stdin.on('data', function(chunk) {
+      chunks.push(chunk);
+    });
+    process.stdin.on('end', function() {
+      parseData(null, Buffer.concat(chunks));
+    });
+  } else {
+    fs.readFile(file, parseData);
+  }
 
-  Caps.download(data, Stores, log, function(err, buf) {
+  function parseData(err, data) {
     if (err) throw err;
-    if (outputFile)
-      fs.writeFileSync(outputFile, buf);
-    else
-      console.log(buf.toString());
-  });
+
+    if (format == 'json')
+      download(null, JSON.parse(data.toString()));
+    else if (format == 'msgpack')
+      download(null, msgpack.unpack(data));
+    else if (format == 'base64')
+      download(null, msgpack.unpack(new Buffer(data.toString(), 'base64')));
+    else if (format == 'png')
+      PNG.decode(data, data.length, function(err, decoded) {
+        download(err, err || msgpack.unpack(decoded));
+      });
+  }
+
+  function download(err, data) {
+    if (err) throw err;
+    Caps.download(data, Stores, log, function(err, buf) {
+      if (err) throw err;
+      if (output == '-')
+        process.stdout.write(buf);
+      else
+        fs.writeFileSync(output, buf);
+    });
+  }
 }
