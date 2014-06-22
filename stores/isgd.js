@@ -1,6 +1,8 @@
 var request = require('superagent');
 
 module.exports = {
+  name: 'is.gd',
+
   maxChunkSize: 3735,
 
   URL: 'http://is.gd',

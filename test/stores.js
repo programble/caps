@@ -7,8 +7,8 @@ var Stores = require('../stores');
 var CHUNK_SIZE = 8192; // 8 KiB
 
 describe('Store', function() {
-  _.forOwn(Stores, function(store, name) {
-    describe(name, function() {
+  _.forEach(Stores, function(store) {
+    describe(store.name, function() {
       this.timeout(5000);
 
       before(function() {

@@ -1,25 +1,12 @@
-var _ = require('lodash');
+// Order of this array MUST remain stable. New stores should be added to the
+// end. Removed stores should be replaced by null.
 
-function Stores() {
-  return _(Stores).values().sortBy('id').value();
-}
-
-_.assign(Stores, {
-  gist:     require('./gist'),
-  imgur:    require('./imgur'),
-  refheap:  require('./refheap'),
-  sprunge:  require('./sprunge'),
-  isgd:     require('./isgd'),
-  vgd:      require('./vgd'),
-  pastebin: require('./pastebin')
-});
-
-Stores.gist.id     = 0;
-Stores.imgur.id    = 5;
-Stores.refheap.id  = 10;
-Stores.sprunge.id  = 15;
-Stores.isgd.id     = 20;
-Stores.vgd.id      = 21;
-Stores.pastebin.id = 25;
-
-module.exports = Stores;
+module.exports = [
+  require('./gist'),
+  require('./imgur'),
+  require('./refheap'),
+  require('./sprunge'),
+  require('./isgd'),
+  require('./vgd'),
+  require('./pastebin')
+];

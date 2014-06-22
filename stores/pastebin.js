@@ -1,6 +1,8 @@
 var request = require('superagent');
 
 module.exports = {
+  name: 'Pastebin.com',
+
   maxChunkSize: 384000,
 
   URL: 'http://pastebin.com',

@@ -1,6 +1,8 @@
 var request = require('superagent');
 
 module.exports = {
+  name: 'sprunge',
+
   URL: 'http://sprunge.us',
 
   put: function(buf, done) {
