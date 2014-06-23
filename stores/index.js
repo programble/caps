@@ -8,7 +8,7 @@ module.exports = [
   require('./sprunge'),
   require('./isgd'),
   require('./vgd'),
-  require('./pastebin')
+  require('./pastebin'),
   require('./dagd')
 ];
 
