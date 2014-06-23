@@ -3,6 +3,8 @@ var request = require('superagent');
 module.exports = {
   name: 'da.gd',
 
+  maxChunkSize: 30570, // Due to header limits
+
   URL: 'http://da.gd',
 
   PREFIX: 'http://',
