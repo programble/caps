@@ -8,6 +8,8 @@ var CHUNK_SIZE = 8192; // 8 KiB
 
 describe('Store', function() {
   _.forEach(Stores, function(store) {
+    if (!store) return;
+
     describe(store.name, function() {
       this.timeout(5000);
 
