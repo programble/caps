@@ -101,6 +101,7 @@ which must be considered when choosing chunk sizes.
 | 4     | [is.gd][4]    | URL      | 3735                   |
 | 5     | [v.gd][5]     | URL      | 3735                   | is.gd on a different domain
 | 6     | [pastebin][6] | base64   | 384000                 | Nasty rate limits :disappointed:
+| 7     | [da.gd][7]    | URL      | none                   |
 
  [0]: https://gist.github.com
  [1]: http://imgur.com
@@ -109,6 +110,7 @@ which must be considered when choosing chunk sizes.
  [4]: http://is.gd
  [5]: http://v.gd
  [6]: http://pastebin.com
+ [7]: http://da.gd
 
 Know of any other anonymous public storage services? Open an
 [issue](https://github.com/programble/caps/issues) or [pull
