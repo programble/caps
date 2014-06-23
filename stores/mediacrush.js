@@ -6,6 +6,8 @@ var PNG = require('../lib/png');
 module.exports = {
   name: 'mediacrush',
 
+  maxChunkSize: 49999602, // 50 MB PNG
+
   URL: 'https://mediacru.sh',
 
   put: function(buf, done) {
