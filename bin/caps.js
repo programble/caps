@@ -15,6 +15,8 @@ function showHelp() {
     'upload options:',
     '  -b, --chunk-size=262144  maximum chunk size in bytes',
     '  -r, --redundancy=1       chunk upload redundancy',
+    '  -s, --stores=...         comma-separated list of stores to use',
+    '  -x, --exclude=...        comma-separated list of stores to exclude',
     '',
     'convert options:',
     '  -i, --input=base64       format of input (see -f)',
@@ -25,8 +27,13 @@ function showHelp() {
     '',
     'general options:',
     '  -q, --quiet              suppress logging',
-    '  -h, --help               show help'
+    '  -h, --help               show help',
+    '',
+    'stores:'
   ].map(function(l) { console.error(l); });
+  Stores.map(function(store) {
+    if (store) console.error('  ' + store.name);
+  });
   process.exit();
 }
 
@@ -80,16 +87,25 @@ if (action == 'u') {
     console.error('error: chunk size must be an integer');
     process.exit(1);
   }
+
   var redundancy = argv.r || argv.redundancy || 1;
   if (!_.isNumber(redundancy)) {
     console.error('error: redundancy must be an integer');
     process.exit(1);
   }
 
-  var stores = _.reject(Stores, function(store) {
-    if (store && store.maxChunkSize)
-      return store.maxChunkSize < chunkSize;
-    return !store;
+  var storeNames = argv.s || argv.stores;
+  if (storeNames) storeNames = storeNames.split(',');
+
+  var excludeNames = argv.x || argv.exclude;
+  if (excludeNames) excludeNames = excludeNames.split(',');
+
+  var stores = _.filter(Stores, function(store) {
+    if (!store) return false;
+    if (store.maxChunkSize < chunkSize) return false;
+    if (excludeNames && _.contains(excludeNames, store.name)) return false;
+    if (storeNames && !_.contains(storeNames, store.name)) return false;
+    return true;
   });
   if (!stores.length) {
     console.error('error: no available stores');
