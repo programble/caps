@@ -21,6 +21,8 @@ usage: caps upload|download|convert [options...] [file]
 upload options:
   -b, --chunk-size=262144  maximum chunk size in bytes
   -r, --redundancy=1       chunk upload redundancy
+  -s, --stores=...         comma-separated list of stores to use
+  -x, --exclude=...        comma-separated list of stores to exclude
 
 convert options:
   -i, --input=base64       format of input (see -f)
@@ -53,8 +55,13 @@ file. By default data is written to standard output.
 Caps splits files into chunks of 256 KiB by default. The (maximum) chunk
 size can be set with the `-b` option, in bytes. Each chunk can be
 uploaded to multiple stores with the `-r` option. This will provide
-redundancy in case retrieving a chunk from one store fails. The
-information needed to retrieve the original file is then written to
+redundancy in case retrieving a chunk from one store fails.
+
+By default, Caps uploads to any stores capable of storing the specified
+chunk size. The `-s` option can be used to set the list of stores to
+use. Alternatively, stores can be blacklisted with the `-x` option.
+
+The information needed to retrieve the original file is then written to
 standard output, or a file with the `-o` option, in the format specified
 by the `-f` option.
 
