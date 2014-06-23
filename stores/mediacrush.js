@@ -22,7 +22,7 @@ module.exports = {
       });
 
       req.end(function(err, res) {
-        if (err || res.error)
+        if (err || res.error && res.status != 409)
           done(err || res.error);
         else if (res.body.hash)
           done(null, res.body.hash);
