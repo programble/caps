@@ -9,6 +9,7 @@ module.exports = [
   require('./isgd'),
   require('./vgd'),
   require('./pastebin')
+  require('./dagd')
 ];
 
 for (var i = 0; i < module.exports.length; i++)
