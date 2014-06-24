@@ -102,7 +102,6 @@ if (action == 'u') {
 
   var stores = _.filter(Stores, function(store) {
     if (!store) return false;
-    if (store.maxChunkSize < chunkSize) return false;
     if (excludeNames && _.contains(excludeNames, store.name)) return false;
     if (storeNames && !_.contains(storeNames, store.name)) return false;
     return true;
@@ -113,7 +112,13 @@ if (action == 'u') {
 
   readInput(function(err, buf) {
     if (err) throw err;
-    Caps.upload(buf, chunkSize, redundancy, stores, log, function(err, data) {
+    Caps.upload({
+      buf: buf,
+      chunkSize: chunkSize,
+      redundancy: redundancy,
+      stores: stores,
+      log: log
+    }, function(err, data) {
       if (err) throw err;
       Convert.to(format, data, function(err, dataBuf) {
         if (err) throw err;
