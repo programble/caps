@@ -107,7 +107,6 @@ which must be considered when choosing chunk sizes.
 | ----- | --------------- | -------- | ---------------------- | -----
 | 0     | [gist][0]       | base64   | unknown                |
 | 1     | [imgur][1]      | PNG      | 999602                 | Lossless PNGs up to 1 MB
-| 2     | [refheap][2]    | base64   | 460797                 |
 | 3     | [sprunge][3]    | base64   | none                   |
 | 4     | [is.gd][4]      | URL      | 3735                   |
 | 5     | [v.gd][5]       | URL      | 3735                   | is.gd on a different domain
@@ -117,7 +116,6 @@ which must be considered when choosing chunk sizes.
 
  [0]: https://gist.github.com
  [1]: http://imgur.com
- [2]: https://www.refheap.com
  [3]: http://sprunge.us
  [4]: http://is.gd
  [5]: http://v.gd
