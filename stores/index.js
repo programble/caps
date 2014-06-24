@@ -4,7 +4,7 @@
 module.exports = [
   require('./gist'),
   require('./imgur'),
-  require('./refheap'),
+  null,
   require('./sprunge'),
   require('./isgd'),
   require('./vgd'),
