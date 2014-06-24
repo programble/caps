@@ -131,7 +131,11 @@ if (action == 'u') {
     if (err) throw err;
     Convert.from(format, data, function(err, data) {
       if (err) throw err;
-      Caps.download(data, Stores, log, function(err, buf) {
+      Caps.download({
+        data: data,
+        stores: Stores,
+        log: log
+      }, function(err, buf) {
         if (err) throw err;
         writeOutput(buf);
       });
