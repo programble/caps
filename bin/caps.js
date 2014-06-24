@@ -65,10 +65,12 @@ function readInput(done) {
 var output = argv.o || argv.output || '-';
 
 function writeOutput(buf) {
-  if (output == '-')
+  if (output == '-') {
+    log();
     process.stdout.write(buf);
-  else
+  } else {
     fs.writeFileSync(output, buf);
+  }
 }
 
 var format = argv.f || argv.format || 'base64';
