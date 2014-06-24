@@ -14,6 +14,7 @@ function showHelp() {
     '',
     'upload options:',
     '  -b, --chunk-size=262144  maximum chunk size in bytes',
+    '  -v, --vary               vary chunk size',
     '  -r, --redundancy=1       chunk upload redundancy',
     '  -s, --stores=...         comma-separated list of stores to use',
     '  -x, --exclude=...        comma-separated list of stores to exclude',
@@ -88,6 +89,8 @@ if (action == 'u') {
     process.exit(1);
   }
 
+  var vary = argv.v || argv.vary;
+
   var redundancy = argv.r || argv.redundancy || 1;
   if (!_.isNumber(redundancy)) {
     console.error('error: redundancy must be an integer');
@@ -117,6 +120,7 @@ if (action == 'u') {
       chunkSize: chunkSize,
       redundancy: redundancy,
       stores: stores,
+      vary: vary,
       log: log
     }, function(err, data) {
       if (err) throw err;
