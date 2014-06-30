@@ -4,7 +4,7 @@ var crypto = require('crypto');
 
 var Stores = require('../stores');
 
-var CHUNK_SIZE = 8192; // 8 KiB
+var CHUNK_SIZE = 262144; // 256 KiB
 
 describe('Store', function() {
   _.forEach(Stores, function(store) {
