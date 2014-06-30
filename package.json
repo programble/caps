@@ -1,6 +1,6 @@
 {
   "name": "caps",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Store any file on anonymous public services",
   "bin": {
     "caps": "./bin/caps.js"
