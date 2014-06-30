@@ -30,6 +30,7 @@ module.exports = {
   get: function(id, len, done) {
     request.get(this.URL + '/raw.php')
       .query({ i: id })
+      .redirects(0)
       .end(function(err, res) {
         if (err || res.error)
           done(err || res.error);
