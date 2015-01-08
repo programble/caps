@@ -13,7 +13,7 @@
     "url": "git://github.com/programble/caps"
   },
   "author": "Curtis McEnroe <programble@gmail.com> (http://cmcenroe.me)",
-  "license": "Unlicense",
+  "license": "ISC",
   "bugs": {
     "url": "https://github.com/programble/caps/issues"
   },
