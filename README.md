@@ -110,7 +110,7 @@ which must be considered when choosing chunk sizes.
 | 3     | [sprunge][3]    | base64   | none                   |
 | 4     | [is.gd][4]      | URL      | 3735                   |
 | 5     | [v.gd][5]       | URL      | 3735                   | is.gd on a different domain
-| 6     | [pastebin][6]   | base64   | 384000                 | Nasty rate limits :disappointed:
+| 6     | [pastebin][6]   | base64   | 384000                 | Upload disabled
 | 7     | [da.gd][7]      | URL      | 30570                  |
 | 8     | [mediacrush][8] | PNG      | 49999602               |
 
