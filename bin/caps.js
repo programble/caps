@@ -109,6 +109,7 @@ if (action == 'u') {
     if (!store) return false;
     if (excludeNames && _.contains(excludeNames, store.name)) return false;
     if (storeNames && !_.contains(storeNames, store.name)) return false;
+    if (store.disabled) return false;
     return true;
   });
   if (!stores.length) {

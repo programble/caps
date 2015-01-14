@@ -2,6 +2,7 @@ var request = require('superagent');
 
 module.exports = {
   name: 'pastebin',
+  disabled: true,
 
   maxChunkSize: 384000,
 
